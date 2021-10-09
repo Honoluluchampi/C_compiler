@@ -18,6 +18,6 @@ assert()
 }
 
 assert 21 '5-4+20'
-#assert 42 42
+assert 14 '3   + 23  - 12'
 
 echo OK
