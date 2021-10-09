@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+char *user_input;
+
 // kinds of token
 typedef enum
 {
@@ -32,6 +34,21 @@ void error(char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt); // 可変兆個の変数を ap に格納
+
+    vfprintf(stderr, fmt, ap);
+    fprintf(stderr, "\n");
+    exit(1);
+}
+
+void error_at(char *loc, char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt); // 可変兆個の変数を ap に格納
+
+    int pos = loc - user_input;
+    fprintf(stderr, "%s\n", user_input);
+    fprintf(stderr, "%*s", pos, " ");
+    fprintf(stderr, "^ ");
     vfprintf(stderr, fmt, ap);
     fprintf(stderr, "\n");
     exit(1);
@@ -52,7 +69,7 @@ bool consume(char op)
 void expect(char op)
 {
     if(token->kind != TK_RESERVED || token->str[0] != op)
-        error("this token is not '%c'", op);
+        error_at(token->str, "this token is not '%c'", op);
     token = token->next;
 }
 
@@ -61,7 +78,7 @@ void expect(char op)
 int expect_number()
 {
     if (token->kind != TK_NUM)
-        error("its not number.");
+        error_at(token->str, "its not number.");
     int val = token->val;
     token = token->next;
     return val;
@@ -128,6 +145,7 @@ int main(int argc, char **argv)
     }
 
     token = tokenize(argv[1]);
+    user_input = argv[1];
 
     printf(".intel_syntax noprefix\n");
     printf(".globl main\n");
