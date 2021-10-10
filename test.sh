@@ -19,6 +19,8 @@ assert()
 
 assert 21 '5-4+20'
 assert 14 '3   + 23  - 12'
-assert 4 '1+3+('
+assert 54 '18 * 3'
+assert 5 '20 / 4'
+assert 21 '3 + 7 * (3-1) + 4'
 
 echo OK
